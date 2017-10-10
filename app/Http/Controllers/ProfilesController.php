@@ -279,13 +279,16 @@ class ProfilesController extends Controller
             $filename = 'avatar.'.$avatar->getClientOriginalExtension();
             $save_path = storage_path().'/users/id/'.$currentUser->id.'/uploads/images/avatar/';
             $path = $save_path.$filename;
-            $public_path = '/images/profile/'.$currentUser->id.'/avatar/'.$filename;
+            $public_path = public_path().'/images/profile/' . $currentUser->id . '/avatar/' . $filename;
 
             // Make the user a folder and set permissions
             File::makeDirectory($save_path, $mode = 0755, true, true);
 
             // Save the file to the server
             Image::make($avatar)->resize(300, 300)->save($save_path.$filename);
+            
+            // Save image to public path
+            Image::make($avatar)->resize(300, 300)->save($public_path);
 
             // Save the public image path
             $currentUser->profile->avatar = $public_path;
